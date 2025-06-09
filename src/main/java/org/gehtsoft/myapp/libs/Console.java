@@ -29,7 +29,9 @@ public class Console
     }
     public int readInteger(String prompt)  {
         System.out.print(prompt+": ");
-        return scanner.nextInt();
+        int result = scanner.nextInt();
+        scanner.nextLine();
+        return result;
     }
     public String getOption(String prompt, String[] options) {
         System.out.println(prompt+":");
