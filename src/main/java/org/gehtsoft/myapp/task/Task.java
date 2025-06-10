@@ -1,7 +1,7 @@
 package org.gehtsoft.myapp.task;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 
 abstract public class Task {
-        abstract public String run() throws FileNotFoundException;
+        abstract public String run() throws IOException;
 }
