@@ -3,9 +3,9 @@ package org.gehtsoft.myapp.task;
 import org.gehtsoft.myapp.libs.CaesarCipher;
 import org.gehtsoft.myapp.libs.Console;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.util.Scanner;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 
 public class CaesarCipherTask extends Task {
@@ -17,29 +17,39 @@ public class CaesarCipherTask extends Task {
         console = Console.getInstance();
         this.encrypt = encrypt;
     }
-    public String run() throws FileNotFoundException {
+    public String run() throws IOException {
         String inputString = "";
-        int shiftKey = 0;
+        int shiftKey;
 
         String source = console.getOption("Select source", new String[]{"File", "Console"});
-        switch(source){
+        switch (source) {
             case "1":
                 String fileName = console.readString("Enter filename");
-                Scanner file = new Scanner(new File(fileName));
-                inputString = file.nextLine();
-                shiftKey = file.nextInt();
+                inputString = new String(Files.readAllBytes(Paths.get(fileName)));
                 System.out.println("String to " + (encrypt ? "encrypt" : "decrypt") + ": " + inputString);
-                System.out.println("Shift key: " + shiftKey);
                 break;
             case "2":
                 inputString = console.readString("Enter string to " + (encrypt ? "encrypt" : "decrypt"));
-                shiftKey =  console.readInteger("Enter shift key");
                 break;
         }
-
-        if(encrypt)
+        if (encrypt) {
+            shiftKey = console.readInteger("Enter shift key");
             return cipher.encrypt(inputString, shiftKey);
-        else
-            return cipher.decrypt(inputString, shiftKey);
+        }
+
+        String knownKey = console.readString("Do you known the shift key? (y/n)");
+        switch (knownKey.toLowerCase()) {
+            case "y":
+                shiftKey = console.readInteger("Enter shift key");
+                break;
+            case "n":
+                shiftKey = cipher.findShiftKey(inputString, 1);
+                System.out.println("Possible shift key: " + shiftKey);
+                break;
+            default:
+                System.out.println("Invalid input. Returning unmodified string.");
+                return inputString;
+        }
+        return cipher.decrypt(inputString, shiftKey);
     }
 }

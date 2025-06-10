@@ -5,10 +5,10 @@ import org.gehtsoft.myapp.task.Calculator;
 import org.gehtsoft.myapp.task.Task;
 import org.gehtsoft.myapp.libs.Console;
 
-import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public class Main {
-    public static void main(String[] args) throws FileNotFoundException {
+    public static void main(String[] args) throws IOException {
         Task task;
         Console console = Console.getInstance();
 
